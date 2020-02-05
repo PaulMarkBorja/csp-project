@@ -2109,6 +2109,48 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     source: String
@@ -2117,40 +2159,40 @@ __webpack_require__.r(__webpack_exports__);
     return {
       drawer: null,
       rating: 4.5,
-      // *not fixed, it should get the ave of ratings
       rules: [function (v) {
-        return v.length <= 100 || 'Max 25 characters';
+        return v.length <= 100 || "Max 25 characters";
       }],
       value: "Write your review here...",
       dialog: false,
       headers: [{
-        text: 'Review',
-        align: 'left',
+        text: "Review",
+        align: "left",
         sortable: false,
-        value: 'review'
+        value: "review"
       }, {
-        text: 'Rating',
-        value: 'rating'
+        text: "Rating",
+        value: "rating"
       }, {
-        text: 'Actions',
-        value: 'action',
+        text: "Actions",
+        value: "action",
         sortable: false
       }],
       items: [],
       editedIndex: -1,
       editedItem: {
-        review: '',
+        id: '',
+        review: "",
         rating: 0
       },
       defaultItem: {
-        review: '',
+        review: "",
         rating: 0
       }
     };
   },
   computed: {
     formTitle: function formTitle() {
-      return this.editedIndex === -1 ? 'Write a review' : 'Edit Item';
+      return this.editedIndex === -1 ? "Write a review" : "Edit Item";
     }
   },
   watch: {
@@ -2163,13 +2205,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     initialize: function initialize() {
-      this.items = [{
-        review: 'Lorem ipsum atque quo eveniet pariatur corporis',
-        rating: 3.5
-      }, {
-        review: 'The delivery is good!',
-        rating: 4.0
-      }];
+      var _this = this;
+
+      axios.get("/api/reviews").then(function (res) {
+        _this.items = res.data;
+
+        _this.getAverage();
+      });
     },
     editItem: function editItem(item) {
       this.editedIndex = this.items.indexOf(item);
@@ -2178,28 +2220,46 @@ __webpack_require__.r(__webpack_exports__);
     },
     deleteItem: function deleteItem(item) {
       var index = this.items.indexOf(item);
-      confirm('Are you sure you want to delete this item?') && this.items.splice(index, 1);
+      confirm("Are you sure you want to delete this item?") && this.items.splice(index, 1) && axios["delete"]("/api/reviews/" + item.id);
+      this.getAverage();
+    },
+    getAverage: function getAverage() {
+      this.rating = (this.items.reduce(function (i, j) {
+        return i + j.rating;
+      }, 0) / this.items.length).toFixed(2);
     },
     close: function close() {
-      var _this = this;
+      var _this2 = this;
 
       this.dialog = false;
       setTimeout(function () {
-        _this.editedItem = Object.assign({}, _this.defaultItem);
-        _this.editedIndex = -1;
+        _this2.editedItem = Object.assign({}, _this2.defaultItem);
+        _this2.editedIndex = -1;
       }, 300);
     },
     save: function save() {
+      var _this3 = this;
+
       if (this.editedIndex > -1) {
         Object.assign(this.items[this.editedIndex], this.editedItem);
+        axios.patch("/api/reviews/" + this.editedItem.id, this.editedItem).then(function (res) {
+          _this3.getAverage();
+
+          return res.data;
+        });
       } else {
+        axios.post("/api/reviews", this.editedItem).then(function (res) {
+          _this3.getAverage();
+
+          return res.data;
+        });
         this.items.push(this.editedItem);
       }
 
       this.close();
     },
     logout: function logout() {
-      axios.post('./logout').then(function (response) {
+      axios.post("./logout").then(function (response) {
         window.location.href = "./";
       });
     }
@@ -40053,7 +40113,7 @@ var render = function() {
                                             },
                                             [
                                               _vm._v(
-                                                "We want to hear your feedback!"
+                                                "\n                                                We want to hear your\n                                                feedback!\n                                            "
                                               )
                                             ]
                                           ),
@@ -40067,7 +40127,7 @@ var render = function() {
                                     _vm._v(" "),
                                     _c("div", { staticClass: "pa-3" }, [
                                       _vm._v(
-                                        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis sint odit harum atque quo eveniet pariatur corporis asperiores fugiat nam magnam"
+                                        "\n                                        Lorem ipsum dolor sit amet\n                                        consectetur adipisicing elit. Omnis\n                                        sint odit harum atque quo eveniet\n                                        pariatur corporis asperiores fugiat\n                                        nam magnam\n                                    "
                                       )
                                     ])
                                   ],
@@ -40103,13 +40163,7 @@ var render = function() {
                                     staticClass:
                                       "black--text text--lighten-2 caption mr-2"
                                   },
-                                  [
-                                    _vm._v(
-                                      "\n                  (" +
-                                        _vm._s(_vm.rating) +
-                                        ")\n              "
-                                    )
-                                  ]
+                                  [_vm._v("(" + _vm._s(_vm.rating) + ")")]
                                 ),
                                 _vm._v(" "),
                                 _c("v-rating", {
@@ -40219,7 +40273,7 @@ var render = function() {
                                                                   ]
                                                                 ),
                                                                 _vm._v(
-                                                                  "Post Review\n                          "
+                                                                  "Post Review\n                                                        "
                                                                 )
                                                               ],
                                                               1
@@ -40315,7 +40369,7 @@ var render = function() {
                                                                             )
                                                                           },
                                                                           expression:
-                                                                            "editedItem.review"
+                                                                            "\n                                                                            editedItem.review\n                                                                        "
                                                                         }
                                                                       }
                                                                     )
@@ -40339,7 +40393,7 @@ var render = function() {
                                                                       },
                                                                       [
                                                                         _vm._v(
-                                                                          "\n                                          Ratings:\n                                      "
+                                                                          "Ratings:"
                                                                         )
                                                                       ]
                                                                     ),
@@ -40378,7 +40432,7 @@ var render = function() {
                                                                             )
                                                                           },
                                                                           expression:
-                                                                            "editedItem.rating"
+                                                                            "\n                                                                            editedItem.rating\n                                                                        "
                                                                         }
                                                                       }
                                                                     )
@@ -40461,11 +40515,7 @@ var render = function() {
                                               }
                                             }
                                           },
-                                          [
-                                            _vm._v(
-                                              "\n                      mdi-pencil\n                  "
-                                            )
-                                          ]
+                                          [_vm._v("mdi-pencil")]
                                         ),
                                         _vm._v(" "),
                                         _c(
@@ -40478,11 +40528,7 @@ var render = function() {
                                               }
                                             }
                                           },
-                                          [
-                                            _vm._v(
-                                              "\n                      mdi-trash-can-outline\n                  "
-                                            )
-                                          ]
+                                          [_vm._v("mdi-trash-can-outline")]
                                         )
                                       ]
                                     }
