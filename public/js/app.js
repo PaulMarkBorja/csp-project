@@ -2151,6 +2151,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     source: String
@@ -40173,6 +40174,7 @@ var render = function() {
                                     dense: "",
                                     "half-increments": "",
                                     hover: "",
+                                    readonly: "true",
                                     size: "30"
                                   },
                                   model: {

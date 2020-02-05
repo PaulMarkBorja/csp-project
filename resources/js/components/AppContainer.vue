@@ -74,6 +74,7 @@
                                         dense
                                         half-increments
                                         hover
+                                        readonly="true"
                                         size="30"
                                     ></v-rating>
                                 </v-card-actions>
